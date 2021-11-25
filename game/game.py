@@ -18,7 +18,7 @@ class Game:
         # 4 - left
         self.last_update = pygame.time.get_ticks()
 
-        self.world = World(19, 22, self.width, self.height)
+        self.world = World(19, 22, self.width, self.height, self.screen, self.clock)
 
     def run(self):
         self.playing = True
@@ -83,6 +83,6 @@ class Game:
                 polygon = [(x + self.width/2, y + self.height/18) for x, y in polygon]
                 #pygame.draw.polygon(self.screen, (255, 0, 0), polygon, 1)
 
-        self.screen.blit(pygame.font.SysFont('Arial', 25).render(str(self.world.get_score()), True, (255, 0, 0)), (0, 0))
+        self.screen.blit(pygame.font.SysFont('Arial', 25).render("Ваш результат: " + str(self.world.get_score()), True, (255, 0, 0)), (0, 0))
 
         pygame.display.flip()

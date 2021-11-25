@@ -1,14 +1,13 @@
 import pygame
 import sys
 
-bg = pygame.image.load("assets/Packman_main_menu2.png")
-
 class ShowScore:
 
-
-    def __init__(self, _screen, _clock):
+    def __init__(self, _screen, _clock, score):
         self.screen = _screen
         self.clock = _clock
+        self.width, self.height = self.screen.get_size()
+        self.score = score
 
     def run(self):
         self.playing = True
@@ -32,6 +31,6 @@ class ShowScore:
         pass
 
     def draw(self):
-        self.screen.fill((0, 0, 0))
-        self.screen.blit(bg, (0, 0))
+        self.screen.fill((255, 200, 100))
+        self.screen.blit(pygame.font.SysFont('Arial', 25).render("Ваш результат: " + str(self.score), True, (255, 0, 0)), (self.width // 2, self.height // 2))
         pygame.display.flip()

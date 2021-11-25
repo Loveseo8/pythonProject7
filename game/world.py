@@ -1,15 +1,16 @@
 import pygame
 from .settings import TILE_SIZE
-import random
-
+from .showscore import ShowScore
 
 class World:
 
-    def __init__(self, _grid_length_x, _grid_length_y, _width, _height):
+    def __init__(self, _grid_length_x, _grid_length_y, _width, _height, screen, clock):
         self.grid_length_x = _grid_length_x
         self.grid_length_y = _grid_length_y
         self.width = _width
         self.height = _height
+        self.screen = screen
+        self.clock = clock
 
         self.world = self.create_world()
         self.tiles = self.load_images()
@@ -126,6 +127,8 @@ class World:
             next_pos = (self.hero_pos[0], self.hero_pos[1] - 1)
         if ['dragon_green', 'dragon_yellow', 'dragon_blue', 'dragon_red'].count(
                 self.world[next_pos[0]][next_pos[1]]["tile"]) != 0:
+            showscore = ShowScore(self.screen, self.clock, self.score)
+            showscore.run()
             return [False, 'died']
         if self.world[next_pos[0]][next_pos[1]]['tile'] == 'wall':
             return [False, 'wall']
