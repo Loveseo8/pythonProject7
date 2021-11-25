@@ -110,26 +110,28 @@ class World:
         next_pos = ()
         if direction == 1:
             if self.hero_pos[0] == 0:
-                return False
+                return [False, 'wall']
             next_pos = (self.hero_pos[0] - 1, self.hero_pos[1])
         if direction == 2:
             if self.hero_pos[0] == 18:
-                return False
+                return [False, 'wall']
             next_pos = (self.hero_pos[0] + 1, self.hero_pos[1])
         if direction == 4:
             if self.hero_pos[1] == 21:
-                return False
+                return [False, 'wall']
             next_pos = (self.hero_pos[0], self.hero_pos[1] + 1)
         if direction == 3:
             if self.hero_pos[1] == 0:
-                return False
+                return [False, 'wall']
             next_pos = (self.hero_pos[0], self.hero_pos[1] - 1)
-        if ['wall', 'dragon_green', 'dragon_yellow', 'dragon_blue', 'dragon_red'].count(
+        if ['dragon_green', 'dragon_yellow', 'dragon_blue', 'dragon_red'].count(
                 self.world[next_pos[0]][next_pos[1]]["tile"]) != 0:
-            return False
+            return [False, 'died']
+        if self.world[next_pos[0]][next_pos[1]]['tile'] == 'wall':
+            return [False, 'wall']
         if self.world[next_pos[0]][next_pos[1]]["tile"] == 'seed':
             self.score += 1
         self.world[self.hero_pos[0]][self.hero_pos[1]]["tile"] = ''
         self.world[next_pos[0]][next_pos[1]]["tile"] = 'knight'
         self.hero_pos = next_pos
-        return True
+        return [True, 'ok']
