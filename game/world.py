@@ -2,6 +2,7 @@ import pygame
 from .settings import TILE_SIZE
 import random
 
+
 class World:
 
     def __init__(self, _grid_length_x, _grid_length_y, _width, _height):
@@ -13,6 +14,9 @@ class World:
         self.world = self.create_world()
         self.tiles = self.load_images()
 
+        self.hero_pos = (9, 12)
+        self.score = 0
+
     def create_world(self):
         world = []
         for x in range(self.grid_length_x):
@@ -20,13 +24,11 @@ class World:
             for y in range(self.grid_length_y):
                 world_tile = self.grid_to_world(x, y)
                 world[x].append(world_tile)
-
-
-
         return world
 
     def grid_to_world(self, x, y):
-        rect = [(x * TILE_SIZE, y * TILE_SIZE), (x * TILE_SIZE + TILE_SIZE, y * TILE_SIZE), (x * TILE_SIZE + TILE_SIZE, y * TILE_SIZE + TILE_SIZE), (x * TILE_SIZE, y * TILE_SIZE + TILE_SIZE)]
+        rect = [(x * TILE_SIZE, y * TILE_SIZE), (x * TILE_SIZE + TILE_SIZE, y * TILE_SIZE),
+                (x * TILE_SIZE + TILE_SIZE, y * TILE_SIZE + TILE_SIZE), (x * TILE_SIZE, y * TILE_SIZE + TILE_SIZE)]
 
         isometric_poly = [self.cart_to_isometric(x, y) for x, y in rect]
 
@@ -75,9 +77,8 @@ class World:
                     if tille == 8:
                         tile = "dragon_red"
 
-
-
-        out = {"grid": [x, y], "cart_rect": rect, "isometric_poly": isometric_poly, "render_position": [minx, miny], "tile": tile}
+        out = {"grid": [x, y], "cart_rect": rect, "isometric_poly": isometric_poly, "render_position": [minx, miny],
+               "tile": tile}
         return out
 
     def cart_to_isometric(self, x, y):
@@ -96,6 +97,39 @@ class World:
         dragon_blue = pygame.image.load("assets/dragon_blue.png")
         dragon_red = pygame.image.load("assets/dragon_red.png")
 
-        #other object will be loaded here
+        # other object will be loaded here
 
-        return {"cube": cube, "wall": wall, "elixir": elixir, "seed": seed, "knight": knight, "dragon_green": dragon_green, "dragon_yellow": dragon_yellow, "dragon_blue": dragon_blue, "dragon_red": dragon_red}
+        return {"cube": cube, "wall": wall, "elixir": elixir, "seed": seed, "knight": knight,
+                "dragon_green": dragon_green, "dragon_yellow": dragon_yellow, "dragon_blue": dragon_blue,
+                "dragon_red": dragon_red}
+
+    def get_score(self):
+        return self.score
+
+    def move_hero(self, direction):
+        next_pos = ()
+        if direction == 1:
+            if self.hero_pos[0] == 0:
+                return False
+            next_pos = (self.hero_pos[0] - 1, self.hero_pos[1])
+        if direction == 2:
+            if self.hero_pos[0] == 18:
+                return False
+            next_pos = (self.hero_pos[0] + 1, self.hero_pos[1])
+        if direction == 4:
+            if self.hero_pos[1] == 21:
+                return False
+            next_pos = (self.hero_pos[0], self.hero_pos[1] + 1)
+        if direction == 3:
+            if self.hero_pos[1] == 0:
+                return False
+            next_pos = (self.hero_pos[0], self.hero_pos[1] - 1)
+        if ['wall', 'dragon_green', 'dragon_yellow', 'dragon_blue', 'dragon_red'].count(
+                self.world[next_pos[0]][next_pos[1]]["tile"]) != 0:
+            return False
+        if self.world[next_pos[0]][next_pos[1]]["tile"] == 'seed':
+            self.score += 1
+        self.world[self.hero_pos[0]][self.hero_pos[1]]["tile"] = ''
+        self.world[next_pos[0]][next_pos[1]]["tile"] = 'knight'
+        self.hero_pos = next_pos
+        return True

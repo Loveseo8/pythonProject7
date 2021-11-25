@@ -1,7 +1,7 @@
 import pygame
 import sys
 from .world import World
-from.settings import TILE_SIZE
+from.settings import TILE_SIZE, FRAMERATE_DELAY
 
 class Game:
 
@@ -9,6 +9,14 @@ class Game:
         self.screen = _screen
         self.clock = _clock
         self.width, self.height = self.screen.get_size()
+
+        self.direction = 0
+        # 0 - nowhere
+        # 1 - up
+        # 2 - down
+        # 3 - right
+        # 4 - left
+        self.last_update = pygame.time.get_ticks()
 
         self.world = World(19, 22, self.width, self.height)
 
@@ -29,9 +37,20 @@ class Game:
                 if event.key == pygame.K_ESCAPE:
                     pygame.quit()
                     sys.exit()
+                elif event.key == pygame.K_UP:
+                    self.direction = 1
+                elif event.key == pygame.K_DOWN:
+                    self.direction = 2
+                elif event.key == pygame.K_RIGHT:
+                    self.direction = 3
+                elif event.key == pygame.K_LEFT:
+                    self.direction = 4
 
     def update(self):
-        pass
+        if pygame.time.get_ticks() - self.last_update >= FRAMERATE_DELAY and self.direction != 0:
+            if not self.world.move_hero(self.direction):
+                self.direction = 0
+            self.last_update = pygame.time.get_ticks()
 
     def draw(self):
         self.screen.fill((255, 200, 100))
@@ -60,5 +79,7 @@ class Game:
                 polygon = self.world.world[x][y]["isometric_poly"]
                 polygon = [(x + self.width/2, y + self.height/18) for x, y in polygon]
                 #pygame.draw.polygon(self.screen, (255, 0, 0), polygon, 1)
+
+        self.screen.blit(pygame.font.SysFont('Arial', 25).render(str(self.world.get_score()), True, (255, 0, 0)), (0, 0))
 
         pygame.display.flip()
