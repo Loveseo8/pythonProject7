@@ -19,15 +19,7 @@ class Game:
         self.last_update = pygame.time.get_ticks()
 
         self.world = World(19, 22, self.width, self.height)
-        self.knightrect = self.world.tiles["knight"].get_rect()
 
-    def handlekeys(self):
-        key = pygame.key.get_pressed()
-        if key[pygame.K_a]:
-            self.knightrect.move_ip(-10, 0)
-
-        if key[pygame.K_d]:
-            self.knightrect.move_ip(10, 0)
 
     def run(self):
         self.playing = True
@@ -76,19 +68,11 @@ class Game:
 
                 tile = self.world.world[x][y]["tile"]
                 if tile != "":
-                    if tile == "seed" or tile == "elixir" or tile == "dragon_red" or tile == "dragon_blue" or tile == "dragon_green" or tile == "dragon_yellow":
+                    if tile == "seed" or tile == "elixir" or tile == "knight" or tile == "dragon_red" or tile == "dragon_blue" or tile == "dragon_green" or tile == "dragon_yellow":
                         self.screen.blit(self.world.tiles[tile], (render_position[0] + self.width / 2,
                                                                   render_position[1] + self.height / 18 - (
                                                                               self.world.tiles[
                                                                                   tile].get_height() - TILE_SIZE + 16)))
-                    elif tile == "knight":
-                        knight = self.world.tiles[tile]
-                        self.knightrect.x = render_position[0] + self.width / 2
-                        self.knightrect.y = render_position[1] + self.height / 18 - (
-                                                                              self.world.tiles[
-                                                                                  tile].get_height() - TILE_SIZE + 16)
-                        self.screen.blit(knight, self.knightrect)
-                        self.handlekeys()
 
                     else:
                         self.screen.blit(self.world.tiles[tile], (render_position[0] + self.width/2, render_position[1] + self.height/18 - (self.world.tiles[tile].get_height() - TILE_SIZE)))
