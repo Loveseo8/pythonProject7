@@ -14,27 +14,34 @@ def main():
     width, height = screen.get_size()
     font = pygame.font.SysFont('Arial', 25)
 
+    pygame.mixer.music.load('assets/menu_sound.ogg')
+    pygame.mixer.music.play(loops=True)
+
     start_button = pygame.Rect(600, 250, 200, 50)
     record_button = pygame.Rect(600, 325, 200, 50)
     end_button = pygame.Rect(600, 400, 200, 50)
     bg = pygame.image.load("assets/Packman_main_menu.png")
 
-
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                return False
+                pygame.mixer.music.stop()
+                pygame.quit()
+                sys.exit
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = event.pos
 
                 if end_button.collidepoint(mouse_pos):
+                    pygame.mixer.music.stop()
                     pygame.quit()
                     sys.exit
                 if start_button.collidepoint(mouse_pos):
+                    pygame.mixer.music.stop()
                     GAME = Game(screen, clock)
                     GAME.run()
 
                 if record_button.collidepoint(mouse_pos):
+                    pygame.mixer.music.stop()
                     Record = Records(screen, clock)
                     Record.run()
 

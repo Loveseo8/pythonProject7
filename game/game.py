@@ -20,6 +20,9 @@ class Game:
 
         self.world = World(19, 22, self.width, self.height, self.screen, self.clock)
 
+        pygame.mixer.music.load('assets/game_sound.ogg')
+        pygame.mixer.music.play(loops=True)
+
     def run(self):
         self.playing = True
         while self.playing:
@@ -45,6 +48,8 @@ class Game:
                     self.direction = 3
                 elif event.key == pygame.K_s:
                     self.direction = 4
+                elif event.key == pygame.K_p:
+                    pygame.mixer.music.set_volume(abs(pygame.mixer.music.get_volume() - 1.0))
 
     def update(self):
         if pygame.time.get_ticks() - self.last_update >= FRAMERATE_DELAY and self.direction != 0:
