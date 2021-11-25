@@ -109,13 +109,19 @@ class World:
     def move_hero(self, direction):
         next_pos = ()
         if direction == 1:
-            if self.hero_pos[0] == 0:
+            if self.hero_pos[0] == 0 and [3, 10, 18].count(self.hero_pos[1]):
+                next_pos = (18, self.hero_pos[1])
+            elif self.hero_pos[0] == 0:
                 return [False, 'wall']
-            next_pos = (self.hero_pos[0] - 1, self.hero_pos[1])
+            else:
+                next_pos = (self.hero_pos[0] - 1, self.hero_pos[1])
         if direction == 2:
-            if self.hero_pos[0] == 18:
+            if self.hero_pos[0] == 18 and [3, 10, 18].count(self.hero_pos[1]):
+                next_pos = (0, self.hero_pos[1])
+            elif self.hero_pos[0] == 18:
                 return [False, 'wall']
-            next_pos = (self.hero_pos[0] + 1, self.hero_pos[1])
+            else:
+                next_pos = (self.hero_pos[0] + 1, self.hero_pos[1])
         if direction == 4:
             if self.hero_pos[1] == 21:
                 return [False, 'wall']
