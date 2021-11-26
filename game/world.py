@@ -140,6 +140,9 @@ class World:
             return [False, 'wall']
         if self.world[next_pos[0]][next_pos[1]]["tile"] == 'seed':
             self.score += 1
+            if self.score == 147:
+                showscore = ShowScore(self.screen, self.clock, self.score)
+                showscore.run()
         self.world[self.hero_pos[0]][self.hero_pos[1]]["tile"] = ''
         self.world[next_pos[0]][next_pos[1]]["tile"] = 'knight'
         self.hero_pos = next_pos
