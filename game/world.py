@@ -1,9 +1,9 @@
 import pygame
 from .settings import TILE_SIZE
 from .showscore import ShowScore
+from .dragon import Dragon
 
 class World:
-
     def __init__(self, _grid_length_x, _grid_length_y, _width, _height, screen, clock):
         self.grid_length_x = _grid_length_x
         self.grid_length_y = _grid_length_y
@@ -17,6 +17,12 @@ class World:
 
         self.hero_pos = (9, 12)
         self.score = 0
+
+        self.dragons = []
+        self.dragons.append(Dragon('yellow', (9, 9)))
+        #self.dragons.append(Dragon('yellow', (10, 10)))
+        self.dragons.append(Dragon('blue', (9, 10)))
+        #self.dragons.append(Dragon('blue', (8, 10)))
 
     def create_world(self):
         world = []
@@ -45,7 +51,7 @@ class World:
                     [1, 2, 1, 1, 2, 2, 2, 1, 0, 0, 0, 0, 0, 0, 2, 1, 2, 2, 2, 1, 2, 1],
                     [1, 2, 1, 1, 2, 1, 2, 1, 0, 1, 1, 1, 0, 1, 2, 1, 2, 1, 2, 1, 2, 1],
                     [1, 2, 2, 2, 2, 1, 2, 0, 0, 1, 7, 1, 0, 1, 2, 2, 2, 1, 2, 2, 2, 1],
-                    [1, 1, 1, 2, 1, 1, 1, 1, 0, 8, 5, 1, 4, 1, 1, 1, 0, 1, 1, 2, 1, 1],
+                    [1, 1, 1, 2, 1, 1, 1, 1, 0, 6, 7, 1, 4, 1, 1, 1, 0, 1, 1, 2, 1, 1],
                     [1, 2, 2, 2, 2, 1, 2, 0, 0, 1, 6, 1, 0, 1, 2, 0, 0, 1, 2, 2, 2, 1],
                     [1, 2, 1, 1, 2, 1, 2, 0, 0, 1, 1, 1, 0, 1, 2, 1, 0, 1, 2, 1, 2, 1],
                     [1, 2, 1, 1, 2, 0, 2, 1, 0, 0, 0, 0, 0, 0, 2, 1, 2, 2, 2, 1, 2, 1],
@@ -108,6 +114,12 @@ class World:
         return self.score
 
     def move_hero(self, direction):
+        if direction == 0:
+            for i in self.dragons:
+                if i.iterate(self.world, self.hero_pos):
+                    return [False, 'died']
+            return [False, 'wall']
+
         next_pos = ()
         if direction == 1:
             if self.hero_pos[0] == 0 and [3, 10, 18].count(self.hero_pos[1]):
@@ -133,8 +145,6 @@ class World:
             next_pos = (self.hero_pos[0], self.hero_pos[1] - 1)
         if ['dragon_green', 'dragon_yellow', 'dragon_blue', 'dragon_red'].count(
                 self.world[next_pos[0]][next_pos[1]]["tile"]) != 0:
-            showscore = ShowScore(self.screen, self.clock, self.score)
-            showscore.run()
             return [False, 'died']
         if self.world[next_pos[0]][next_pos[1]]['tile'] == 'wall':
             return [False, 'wall']
@@ -143,4 +153,9 @@ class World:
         self.world[self.hero_pos[0]][self.hero_pos[1]]["tile"] = ''
         self.world[next_pos[0]][next_pos[1]]["tile"] = 'knight'
         self.hero_pos = next_pos
+
+        for i in self.dragons:
+            if i.iterate(self.world, self.hero_pos):
+                return [False, 'died']
+
         return [True, 'ok']

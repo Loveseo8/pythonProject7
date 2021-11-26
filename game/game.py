@@ -2,6 +2,7 @@ import pygame
 import sys
 from .world import World
 from.settings import TILE_SIZE, FRAMERATE_DELAY
+from .showscore import ShowScore
 
 class Game:
 
@@ -52,12 +53,13 @@ class Game:
                     pygame.mixer.music.set_volume(abs(pygame.mixer.music.get_volume() - 1.0))
 
     def update(self):
-        if pygame.time.get_ticks() - self.last_update >= FRAMERATE_DELAY and self.direction != 0:
+        if pygame.time.get_ticks() - self.last_update >= FRAMERATE_DELAY:
             res = self.world.move_hero(self.direction)
             if not res[0]:
                 self.direction = 0
                 if res[1] == 'died':
-                    pass
+                    showscore = ShowScore(self.screen, self.clock, self.world.get_score())
+                    showscore.run()
             self.last_update = pygame.time.get_ticks()
 
     def draw(self):
